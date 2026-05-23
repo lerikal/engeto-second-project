@@ -43,8 +43,9 @@ public class CryptoService {
      *  Přidá novou kryptoměnu do portfolia
      *
      * @param dto vstupní data nové kryptoměny
+     * @return DTO reprezentace kryptoměny
      */
-    public void addCrypto(CryptoRequestDTO dto) {
+    public CryptoResponseDTO addCrypto(CryptoRequestDTO dto) {
         Crypto crypto = new Crypto(
                 UUID.randomUUID(),
                 dto.getName(),
@@ -54,6 +55,8 @@ public class CryptoService {
         );
 
         portfolio.add(crypto);
+
+        return  toDTO(crypto);
     }
 
     /**

@@ -7,7 +7,6 @@ import com.engeto.engeto_second_project.service.CryptoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +28,12 @@ public class CryptoController {
 
     @Operation(summary = "Přidání nové kryptoměny do portfolia")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Kryptoměna byla vytvořena"),
+            @ApiResponse(responseCode = "200", description = "Kryptoměna byla vytvořena"),
             @ApiResponse(responseCode = "400", description = "Neplatná vstupní data")
     })
     @PostMapping
-    public ResponseEntity<Void> addCrypto(@RequestBody CryptoRequestDTO dto) {
-        cryptoService.addCrypto(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public CryptoResponseDTO addCrypto(@RequestBody CryptoRequestDTO dto) {
+        return cryptoService.addCrypto(dto);
     }
 
     // Získání všech kryptoměn (GET /cryptos):
@@ -59,7 +57,7 @@ public class CryptoController {
     @Operation(summary = "Získání detailu konkrétní kryptoměny")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Kryptoměna nalezena"),
-            @ApiResponse(responseCode = "400", description = "Kryptoměna nebyla nalezena")
+            @ApiResponse(responseCode = "404", description = "Kryptoměna nebyla nalezena")
     })
     @GetMapping("/{id}")
     public ResponseEntity<CryptoResponseDTO> getCrypto(@PathVariable UUID id) {
@@ -72,7 +70,7 @@ public class CryptoController {
     @Operation(summary = "Aktualizace kryptoměny")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Kryptoměna byla aktualizována"),
-            @ApiResponse(responseCode = "400", description = "Kryptoměna nebyla nalezena")
+            @ApiResponse(responseCode = "404", description = "Kryptoměna nebyla nalezena")
     })
     @PutMapping("/{id}")
     public ResponseEntity<CryptoResponseDTO> updateCrypto(@RequestBody CryptoUpdateDTO dto, @PathVariable UUID id) {
@@ -86,7 +84,7 @@ public class CryptoController {
     @Operation(summary = "Výmaz kryptoměny")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Kryptoměna byla smazána"),
-            @ApiResponse(responseCode = "400", description = "Kryptoměna nebyla nalezena")
+            @ApiResponse(responseCode = "404", description = "Kryptoměna nebyla nalezena")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCrypto(@PathVariable UUID id) {
@@ -94,6 +92,6 @@ public class CryptoController {
         if (!removed) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
